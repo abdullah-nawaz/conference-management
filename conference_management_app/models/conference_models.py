@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 from conference_management_app import db
 
 
-class Conferences(db.Model):
+class Conference(db.Model):
     ID_KEY = "id"
     TITLE_KEY = "title"
     START_DATE_KEY = "start_date"
@@ -40,8 +40,8 @@ class Conferences(db.Model):
         return {
             self.ID_KEY: self.id,
             self.TITLE_KEY: self.title,
-            self.START_DATE_KEY: self.start_date,
-            self.END_DATE_KEY: self.end_data,
+            self.START_DATE_KEY: str(self.start_date),
+            self.END_DATE_KEY: str(self.end_data),
             self.DESCRIPTION_KEY: self.description
         }
 
@@ -49,9 +49,9 @@ class Conferences(db.Model):
     def from_json_body(cls, json_body):
         from conference_management_app.common.utils import parse_timestamp
 
-        return Conferences(
+        return Conference(
             title=json_body.get("title"),
             description=json_body.get("description"),
             start_date=parse_timestamp(json_body.get("start_date")),
-            end_data=parse_timestamp(json_body.get("end_data"))
+            end_data=parse_timestamp(json_body.get("end_date"))
         )
