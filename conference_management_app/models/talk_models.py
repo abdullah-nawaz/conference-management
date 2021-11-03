@@ -15,14 +15,6 @@ class Talk(db.Model):
     DESCRIPTION_KEY = "description"
     DURATION_KEY = "duration"
 
-    # different possible durations
-    # assuming possible durations be between 15 minutes to 1 hour with 15 minutes intervals
-    DURATION_FIVE_MIN = 5
-    DURATION_FIFTEEN_MIN = 15
-    DURATION_THIRTY_MIN = 30
-    DURATION_FORTY_FIVE_MIN = 45
-    DURATION_SIXTY_MIN = 60
-
     __tablename__ = 'talks'
 
     id = Column(String(32), primary_key=True)
