@@ -1,0 +1,35 @@
+version: '3.3'
+
+services:
+  conferencemanagementdb:
+    container_name: conferencemanagementdb
+    image: mysql:5.7.8
+    environment:
+      MYSQL_DATABASE: conferencemanagementdb
+      MYSQL_USER: webuser
+      MYSQL_PASSWORD: admin123
+      MYSQL_ROOT_PASSWORD: admin123
+    networks:
+      - default
+    volumes:
+      - conferencemanagementdbvolume:/var/lib/mysql
+    expose:
+      - 3306
+
+  conferencemanagementweb:
+    restart: always
+    build: .
+    container_name: conferencemanagementweb
+    entrypoint: /conference-management/bin/run_conference_management_web.sh
+    volumes:
+      - .:/conference-management
+    networks:
+      - external_network
+      - default
+
+volumes:
+  conferencemanagementdbvolume:
+
+networks:
+  external_network:
+    external: true
