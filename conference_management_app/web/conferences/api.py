@@ -3,6 +3,7 @@ import logging
 
 from flask import request, Response
 
+from conference_management_app import db
 from conference_management_app.common.validate_json import validate_json
 from conference_management_app.web.conferences import conference_management_conference
 from conference_management_app.web.conferences.schemas import create_conference_schema
