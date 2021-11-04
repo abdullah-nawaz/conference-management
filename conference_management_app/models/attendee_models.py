@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Column, String, Enum
+from sqlalchemy import Column, String, Enum, ForeignKey
 
 from conference_management_app import db
 
@@ -21,6 +21,9 @@ class Attendee(db.Model):
     username = Column(String(64), unique=True, nullable=False)
     email = Column(String(255), unique=True, nullable=False)
     type = Column(Enum(TYPE_SPEAKER, TYPE_SPEAKER), nullable=False)
+
+    for_speaker_talk_id = Column(String(32), ForeignKey('talks.id'))
+    for_participant_talk_id = Column(String(32), ForeignKey('talks.id'))
 
     def __init__(self, username, email, type_):
         self.id = str(uuid.uuid4().hex)

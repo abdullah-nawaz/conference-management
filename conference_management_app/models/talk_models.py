@@ -1,9 +1,9 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Column, DateTime, String, Text, Integer
-from sqlalchemy.schema import CheckConstraint
+from sqlalchemy import Column, DateTime, ForeignKey, String, Text, Integer
 from sqlalchemy.orm import relationship
+from sqlalchemy.schema import CheckConstraint
 
 from conference_management_app import db
 
@@ -22,6 +22,12 @@ class Talk(db.Model):
     description = Column(Text)
     date_and_time = Column(DateTime, onupdate=datetime.utcnow(), nullable=False)
     duration = Column(Integer, nullable=False)
+
+    conference_id = Column(String(32), ForeignKey('conferences.id'), nullable=False)
+    speakers = relationship('Attendee', foreign_keys='Attendee.for_speaker_talk_id', backref='talk_for_speaker',
+                            cascade="all, delete-orphan", lazy="dynamic")
+    max_unavailable = relationship('Attendee', foreign_keys='Attendee.for_participant_talk_id',
+                                   backref='talk_for_participant', cascade="all, delete-orphan", lazy="dynamic")
 
     # assumption that duration is between 1 and 100 minutes
     __table_args__ = (CheckConstraint(0 < duration <= 100, name='check_duration_limit'), {})

@@ -22,6 +22,8 @@ class Conference(db.Model):
     start_date = Column(DateTime, onupdate=datetime.utcnow(), nullable=False)
     end_date = Column(DateTime, onupdate=datetime.utcnow(), nullable=False)
 
+    talks = relationship('Talks', backref='conference', cascade="all, delete-orphan", lazy="dynamic")
+
     def __init__(self, title, start_date, end_data, description=None):
         self.id = str(uuid.uuid4().hex)
         self.title = title
