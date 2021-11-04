@@ -30,7 +30,7 @@ class Talk(db.Model):
                                    backref='talk_for_participant', cascade="all, delete-orphan", lazy="dynamic")
 
     # assumption that duration is between 1 and 100 minutes
-    __table_args__ = (CheckConstraint(0 < duration <= 100, name='check_duration_limit'), {})
+    __table_args__ = (CheckConstraint(duration > 0, name='check_duration_lower_limit'), CheckConstraint(duration <= 0, name='check_duration_upper_limit'), )
 
     def __init__(self, title, date_and_time, duration, description=None):
         self.id = str(uuid.uuid4().hex)
