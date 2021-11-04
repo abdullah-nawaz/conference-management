@@ -20,7 +20,7 @@ class Attendee(db.Model):
     id = Column(String(32), primary_key=True)
     username = Column(String(64), unique=True, nullable=False)
     email = Column(String(255), unique=True, nullable=False)
-    type = Column(Enum(TYPE_SPEAKER, TYPE_SPEAKER), nullable=False)
+    type = Column(Enum(TYPE_SPEAKER, TYPE_PARTICIPANT), nullable=False)
 
     for_speaker_talk_id = Column(String(32), ForeignKey('talks.id'))
     for_participant_talk_id = Column(String(32), ForeignKey('talks.id'))

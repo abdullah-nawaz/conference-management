@@ -20,7 +20,7 @@ def get_conferences():
 
 
 @conference_management_conference.route('/conferences/<conference_id>', methods=['GET'])
-def get_conferences(conference_id):
+def get_conference(conference_id):
     """
     Get Conferences with Conference ID
     """

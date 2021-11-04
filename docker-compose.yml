@@ -1,3 +1,5 @@
+# external network is commented but can be activated to have other microservices connected to this current service
+
 version: '3.3'
 
 services:
@@ -24,12 +26,12 @@ services:
     volumes:
       - .:/conference-management
     networks:
-      - external_network
+#      - external_network
       - default
 
 volumes:
   conferencemanagementdbvolume:
 
-networks:
-  external_network:
-    external: true
+#networks:
+#  external_network:
+#    external: true
