@@ -50,7 +50,7 @@ def get_conference(conference_id):
     """
     conference = db.session.query(Conference).filter_by(id=conference_id).first()
     if not conference:
-        LOGGER.info(f"No Conference found with ID {conference}")
+        LOGGER.info(f"No Conference found with ID {conference_id}")
         return Response(CONFERENCE_NOT_FOUND, status=404)
 
     return Response(json.dumps(conference.to_json()), status=200, mimetype='application/json')
@@ -93,22 +93,13 @@ def update_conference(conference_id):
 
     conference = db.session.query(Conference).filter_by(id=conference_id).first()
     if not conference:
-        LOGGER.info(f"No Conference found with ID {conference}")
+        LOGGER.info(f"No Conference found with ID {conference_id}")
         return Response(CONFERENCE_NOT_FOUND, status=404)
 
-    if data.get("start_date") and not data.get("end_date"):
-        if parse_timestamp(data["start_date"]) > conference.end_date:
-            return Response(INVALID_DATE_SELECTION, status=400)
-
-    elif data.get("end_date") and not data.get("start_date"):
-        if parse_timestamp(data["end_date"]) < conference.start_date:
-            return Response(INVALID_DATE_SELECTION, status=400)
-
-    elif data.get("start_date") and data.get("end_date"):
-        if parse_timestamp(data["start_date"]) >= parse_timestamp(data["end_date"]):
-            return Response(INVALID_DATE_SELECTION, status=400)
-
     conference.update_from_json(data)
+    if conference.start_date > conference.end_date:
+        return Response(INVALID_DATE_SELECTION, status=400)
+
     db.session.commit()
     return Response(json.dumps(conference.to_json()), status=200, mimetype="application/json")
 
@@ -120,7 +111,7 @@ def delete_conferences(conference_id):
     """
     conference = db.session.query(Conference).filter_by(id=conference_id).first()
     if not conference:
-        LOGGER.info(f"No Conference found with ID {conference}")
+        LOGGER.info(f"No Conference found with ID {conference_id}")
         return Response(CONFERENCE_NOT_FOUND, status=404)
 
     db.session.delete(conference)
