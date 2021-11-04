@@ -39,7 +39,9 @@ def create_app(environment):
 
     from conference_management_app.web.conferences import \
         conference_management_conference as conference_management_conference_blueprint
+    from conference_management_app.web.talks import conference_management_talk as conference_management_talk_blueprint
 
     app.register_blueprint(conference_management_conference_blueprint, url_prefix="/v1/conference-management")
+    app.register_blueprint(conference_management_talk_blueprint, url_prefix="/v1/conference-management")
 
     return app

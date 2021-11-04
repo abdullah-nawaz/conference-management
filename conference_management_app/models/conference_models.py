@@ -48,14 +48,16 @@ class Conference(db.Model):
         }
 
     def update_from_json(self, json_data):
+        from conference_management_app.common.utils import parse_timestamp
+
         if json_data.get("title"):
             self.title = json_data["title"]
 
         if json_data.get("start_date"):
-            self.start_date = json_data["start_date"]
+            self.start_date = parse_timestamp(json_data["start_date"])
 
         if json_data.get("end_date"):
-            self.end_date = json_data["end_date"]
+            self.end_date = parse_timestamp(json_data["end_date"])
 
         if json_data.get("description"):
             self.description = json_data["description"]

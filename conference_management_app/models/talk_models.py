@@ -39,12 +39,20 @@ class Talk(db.Model):
         self.duration = duration
         self.description = description
 
-    def update_from_object(self, other):
-        assert isinstance(other, self.__class__)
-        self.title = other.title
-        self.date_and_time = other.date_and_time
-        self.duration = other.duration
-        self.description = other.description
+    def update_from_json(self, json_data):
+        from conference_management_app.common.utils import parse_timestamp
+
+        if json_data.get("title"):
+            self.title = json_data["title"]
+
+        if json_data.get("date_and_time"):
+            self.date_and_time = parse_timestamp(json_data["date_and_time"])
+
+        if json_data.get("duration"):
+            self.duration = json_data["duration"]
+
+        if json_data.get("description"):
+            self.description = json_data["description"]
 
     def to_json(self):
         return {
