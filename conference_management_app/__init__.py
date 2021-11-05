@@ -37,10 +37,16 @@ def create_app(environment):
     db.init_app(app)
     db.app = app
 
+    from conference_management_app.web.speakers import \
+        conference_management_speaker as conference_management_speaker_blueprint
+    from conference_management_app.web.participants import \
+        conference_management_participant as conference_management_participant_blueprint
     from conference_management_app.web.conferences import \
         conference_management_conference as conference_management_conference_blueprint
     from conference_management_app.web.talks import conference_management_talk as conference_management_talk_blueprint
 
+    app.register_blueprint(conference_management_speaker_blueprint, url_prefix="/v1/conference-management")
+    app.register_blueprint(conference_management_participant_blueprint, url_prefix="/v1/conference-management")
     app.register_blueprint(conference_management_conference_blueprint, url_prefix="/v1/conference-management")
     app.register_blueprint(conference_management_talk_blueprint, url_prefix="/v1/conference-management")
 
