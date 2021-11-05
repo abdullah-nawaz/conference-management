@@ -118,7 +118,7 @@ def delete_participants(participant_id, talk_id):
         LOGGER.info(f"No Talk found with ID {talk_id}")
         return Response(TALK_NOT_FOUND, status=400)
 
-    participant = db.session.query(Participant).filter_by(id=participant_id, talk_id=talk_id).first()
+    participant = db.session.query(Participant).filter_by(id=participant_id).first()
     if not participant:
         LOGGER.info(f"No Participant found with ID {participant}")
         return Response(PARTICIPANT_NOT_FOUND, status=404)

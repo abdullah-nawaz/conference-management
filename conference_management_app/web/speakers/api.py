@@ -112,7 +112,12 @@ def delete_speakers(speaker_id, talk_id):
     """
     Delete Speakers on Speaker Management app
     """
-    speaker = db.session.query(Speaker).filter_by(id=speaker_id, talk_id=talk_id).first()
+    talk = db.session.query(Talk).filter_by(id=talk_id).first()
+    if not talk:
+        LOGGER.info(f"No Talk found with ID {talk_id}")
+        return Response(TALK_NOT_FOUND, status=400)
+
+    speaker = db.session.query(Speaker).filter_by(id=speaker_id).first()
     if not speaker:
         LOGGER.info(f"No Speaker found with ID {speaker}")
         return Response(SPEAKER_NOT_FOUND, status=404)
