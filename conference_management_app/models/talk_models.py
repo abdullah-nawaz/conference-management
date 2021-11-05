@@ -1,11 +1,25 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Column, DateTime, ForeignKey, String, Text, Integer
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, DateTime, ForeignKey, String, Text, Integer, PrimaryKeyConstraint
+from sqlalchemy.orm import backref, relationship
 from sqlalchemy.schema import CheckConstraint
 
 from conference_management_app import db
+
+talks_speakers = db.Table(
+    "talks_speakers",
+    Column("talk_id", String(32), ForeignKey("talks.id"), nullable=False),
+    Column("speaker_id", String(32), ForeignKey("speakers.id"), nullable=False),
+    PrimaryKeyConstraint("talk_id", "speaker_id"),
+)
+
+talks_participants = db.Table(
+    "talks_participants",
+    Column("talk_id", String(32), ForeignKey("talks.id"), nullable=False),
+    Column("participant_id", String(32), ForeignKey("participants.id"), nullable=False),
+    PrimaryKeyConstraint("talk_id", "participant_id"),
+)
 
 
 class Talk(db.Model):
@@ -24,13 +38,14 @@ class Talk(db.Model):
     duration = Column(Integer, nullable=False)
 
     conference_id = Column(String(32), ForeignKey('conferences.id'), nullable=False)
-    speakers = relationship('Attendee', foreign_keys='Attendee.for_speaker_talk_id', backref='talk_for_speaker',
-                            cascade="all, delete-orphan", lazy="dynamic")
-    max_unavailable = relationship('Attendee', foreign_keys='Attendee.for_participant_talk_id',
-                                   backref='talk_for_participant', cascade="all, delete-orphan", lazy="dynamic")
+    speakers = relationship("Speaker", secondary=talks_speakers, backref=backref('talks', lazy='dynamic'),
+                            lazy="dynamic")
+    participants = relationship("Participant", secondary=talks_participants, backref=backref('talks', lazy='dynamic'),
+                                lazy="dynamic")
 
     # assumption that duration is between 1 and 100 minutes
-    __table_args__ = (CheckConstraint(duration > 0, name='check_duration_lower_limit'), CheckConstraint(duration <= 0, name='check_duration_upper_limit'), )
+    __table_args__ = (CheckConstraint(duration > 0, name='check_duration_lower_limit'),
+                      CheckConstraint(duration <= 100, name='check_duration_upper_limit'),)
 
     def __init__(self, title, date_and_time, duration, description=None):
         self.id = str(uuid.uuid4().hex)
